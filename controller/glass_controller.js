@@ -31,7 +31,7 @@ exports.getGlasses = async (req, res, next) => {
 
     // Additional filter for 'price' (exact match, not regex)
     if (price) {
-      filters.Price = { $regex: new RegExp(price) };
+      filters.Price = { $lte: price };
     }
 
     const glasses = await Glasses.find(filters).skip(skip).limit(limit);

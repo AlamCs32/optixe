@@ -2,7 +2,7 @@ const Joi = require("joi");
 
 exports.productSchemaJoi = Joi.object({
   Name: Joi.string().required(),
-  Price: Joi.string().required(),
+  Price: Joi.number().required(),
   Color: Joi.string().required(),
   Shape: Joi.string().required(),
   FrameType: Joi.string().required(),
