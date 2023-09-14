@@ -7,10 +7,14 @@ const glassesSchema = new Schema(
     Color: String,
     Shape: String,
     FrameType: String,
+    Stock: {
+      type: Number,
+      default: 0,
+    },
     Size: String,
     Gender: {
       type: String,
-      enum: ["Men", "Women", "Kid"],
+      enum: ["Men", "Women", "Kid", "Unisex"],
     },
     Images: [String],
     Details: String,

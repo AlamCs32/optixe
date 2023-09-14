@@ -6,6 +6,7 @@ exports.productSchemaJoi = Joi.object({
   Color: Joi.string().required(),
   Shape: Joi.string().required(),
   FrameType: Joi.string().required(),
+  Stock: Joi.number().required(),
   Size: Joi.string().required(),
   Gender: Joi.string().valid("Men", "Women", "Kid").required(),
   Details: Joi.string(),
