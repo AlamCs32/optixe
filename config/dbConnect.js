@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 const { DataBaseURL } = process.env;
 
-module.exports = () => {
+module.exports = async () => {
   mongoose
     .connect(DataBaseURL, {
       useNewUrlParser: true,

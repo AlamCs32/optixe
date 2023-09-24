@@ -33,12 +33,13 @@ exports.getGlasses = async (req, res, next) => {
     if (price) {
       filters.Price = { $lte: price };
     }
-
+    const count = await Glasses.countDocuments(filters)
     const glasses = await Glasses.find(filters).skip(skip).limit(limit);
 
     return res.status(200).json({
       success: true,
       data: glasses,
+      count
     });
   } catch (error) {
     return next(error);

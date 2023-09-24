@@ -17,3 +17,6 @@ exports.Payment = require("./payment");
 exports.ContactLens = require("./contact_lenses");
 exports.TechnicalInfo = require("./technical_information");
 exports.SubCategory = require("./subCategory");
+
+// Product Wishlist
+exports.Wishlist = require("./wishlist");
