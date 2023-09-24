@@ -4,8 +4,19 @@ const orderSchema = new Schema(
   {
     OrderItem: [
       {
-        type: Schema.Types.ObjectId,
-        ref: "order_item",
+        GlassID: {
+          type: Schema.Types.ObjectId,
+          ref: "glasses",
+        },
+        lenseID: {
+          type: Schema.Types.ObjectId,
+          ref: "lens",
+        },
+        Quantity: {
+          type: Number,
+          default: 1,
+        },
+        Price: Number,
       },
     ],
     UserID: {
@@ -18,13 +29,13 @@ const orderSchema = new Schema(
       default: "pending",
     },
     shippingAddress: String,
-    totalAmount: Number,
+    totalAmount: String,
     paymentMethod: {
       type: String,
-      enum: ["credit card", "debid card", "upi", "cash on delivery"],
+      enum: ['credit_card', 'debit_card', 'upi', 'cod'],
     },
   },
   { timestamps: true }
 );
 
-module.exports = model("order", orderSchema, "order");
+module.exports = model("glassOrder", orderSchema, "glassOrder");

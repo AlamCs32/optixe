@@ -2,7 +2,7 @@ const Joi = require("joi");
 
 exports.lensesSchemaJoi = Joi.object({
   Name: Joi.string().required(),
-  Price: Joi.string().required(),
+  Price: Joi.number().required(),
   Vision_Type: Joi.string().required(),
   Warranty_Period: Joi.string().required(),
   Index_Thickness: Joi.string().required(),

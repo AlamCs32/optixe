@@ -6,6 +6,10 @@ const deliverySchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "order",
     },
+    DeliveryStatusUpdateUserID: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
+    },
     DeliveryStatus: {
       type: String,
       enum: [

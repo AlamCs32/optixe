@@ -3,7 +3,7 @@ const { Schema, model } = require("mongoose");
 const lensSchema = new Schema(
   {
     Name: String,
-    Price: String,
+    Price: Number,
     Vision_Type: String,
     Warranty_Period: String,
     Index_Thickness: String,

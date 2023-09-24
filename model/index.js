@@ -8,7 +8,7 @@ exports.Glasses = require("./glasses");
 exports.Lenses = require("./lens");
 
 //* Order Model
-exports.Order = require("./order");
+exports.GlassOrder = require("./glassOrder");
 exports.OrderItem = require("./orderItem");
 exports.Delivery = require("./delivery");
 exports.Payment = require("./payment");

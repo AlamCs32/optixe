@@ -1,17 +1,17 @@
 const {
-  createOrder,
-  getOrder,
-  getOrderDetails,
-  cancleOrder,
+  createGlassOrder,
+  getGlassOrder,
+  getOrderGlassDetails,
+  cancleGlassOrder,
 } = require("../controller/order_controller");
-
+const { Auth } = require("../middleware/auth")
 const router = require("express").Router();
 
-router.post("/", createOrder);
+router.post("/glass", Auth, createGlassOrder);
 
-router.get("/", getOrder);
-router.get("/:id", getOrderDetails);
+router.get("/glass", Auth, getGlassOrder);
+router.get("/glass/:id", Auth, getOrderGlassDetails);
 
-router.delete("/:id", cancleOrder);
+router.delete("/glass/:id", Auth, cancleGlassOrder);
 
 module.exports = router;
