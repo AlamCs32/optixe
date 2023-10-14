@@ -20,7 +20,7 @@ exports.createLenses = async (req, res, next) => {
 exports.getLenses = async (req, res, next) => {
   try {
     const { Name, price, page } = req.query;
-    const limit = 20;
+    const limit = parseInt(req.query.size) || 20;
     const skip = (parseInt(page) - 1 || 0) * limit;
 
     const search = {};
@@ -28,16 +28,26 @@ exports.getLenses = async (req, res, next) => {
     if (Name) search.Name = { $regex: new RegExp(Name, "i") };
     if (price) search.Price = { $regex: new RegExp(price) };
 
-    let lenses = await Lenses.find(search).skip(skip).limit(20);
+    let [lenses, totalRecord] = await Promise.all([
+      Lenses.find(search).skip(skip).limit(20),
+      Lenses.countDocuments(search)
+    ])
+
+    const pages = Math.ceil(totalRecord / limit)
 
     return res.status(200).json({
       success: true,
       data: lenses,
+      pagination: {
+        pages,
+        totalRecord,
+      }
     });
   } catch (error) {
     return next(error);
   }
 };
+
 exports.getLensesDetails = async (req, res, next) => {
   try {
     let lenses = await Lenses.findById(req.params.id).catch((e) =>

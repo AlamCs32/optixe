@@ -33,13 +33,16 @@ exports.getGlasses = async (req, res, next) => {
     if (price) {
       filters.Price = { $lte: price };
     }
-    const count = await Glasses.countDocuments(filters)
     const glasses = await Glasses.find(filters).skip(skip).limit(limit);
-
+    const count = await Glasses.countDocuments(filters)
+    const totalpage = Math.ceil(count / limit)
     return res.status(200).json({
       success: true,
       data: glasses,
-      count
+      pagination: {
+        page,
+        totalpage
+      }
     });
   } catch (error) {
     return next(error);

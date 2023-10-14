@@ -76,17 +76,12 @@ exports.getGlassOrder = async (req, res, next) => {
 
 exports.getOrderGlassDetails = async (req, res, next) => {
   try {
-    let order = await GlassOrder.findOne({
-      _id: req.params.id
-    }).populate("OrderItem.GlassID")
+    const orderPromise = GlassOrder.findOne({ _id: req.params.id }).populate('OrderItem.GlassID');
+    const deliveryPromise = Delivery.findOne({ OrderID: req.params.id });
+    const paymentPromise = Payment.findOne({ OrderID: req.params.id });
 
-    let delivery = await Delivery.findOne({
-      OrderID: order._id
-    })
+    const [order, delivery, payment] = await Promise.all([orderPromise, deliveryPromise, paymentPromise]);
 
-    let payment = await Payment.findOne({
-      OrderID: order._id
-    })
     return res.status(200).json({
       success: true,
       data: {
@@ -102,6 +97,9 @@ exports.getOrderGlassDetails = async (req, res, next) => {
 
 exports.cancleGlassOrder = async (req, res, next) => {
   try {
+
+
+
     return res.status(200).json({
       success: true,
       message: "Order is Created",
