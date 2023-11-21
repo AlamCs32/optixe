@@ -1,9 +1,10 @@
 const { Lenses } = require("../model");
 const { lensesSchemaJoi } = require("../service/joi/lensesJoi");
 const { NotFound } = require("../service/customeError");
+const { getPaginatedData } = require("../service/helperFunction")
 exports.createLenses = async (req, res, next) => {
   try {
-    await lensesSchemaJoi.validateAsync(req.body, { abortEarly: false });
+    await lensesSchemaJoi.validateAsync(req.body);
 
     let lenses = await Lenses.create(req.body).catch((e) => next(e));
 
@@ -19,28 +20,23 @@ exports.createLenses = async (req, res, next) => {
 
 exports.getLenses = async (req, res, next) => {
   try {
-    const { Name, price, page } = req.query;
-    const limit = parseInt(req.query.size) || 20;
-    const skip = (parseInt(page) - 1 || 0) * limit;
-
+    const { Name, price } = req.query;
     const search = {};
 
     if (Name) search.Name = { $regex: new RegExp(Name, "i") };
     if (price) search.Price = { $regex: new RegExp(price) };
 
-    let [lenses, totalRecord] = await Promise.all([
-      Lenses.find(search).skip(skip).limit(20),
-      Lenses.countDocuments(search)
-    ])
 
-    const pages = Math.ceil(totalRecord / limit)
+    const { data, totalRecord, pages, limit, currentPage } = await getPaginatedData(Lenses, req.query, search)
 
     return res.status(200).json({
       success: true,
-      data: lenses,
+      data,
       pagination: {
         pages,
         totalRecord,
+        currentPage,
+        limit
       }
     });
   } catch (error) {
@@ -66,7 +62,7 @@ exports.getLensesDetails = async (req, res, next) => {
 
 exports.updateLenses = async (req, res, next) => {
   try {
-    await lensesSchemaJoi.validateAsync(req.body, { abortEarly: false });
+    await lensesSchemaJoi.validateAsync(req.body);
 
     let lenses = await Lenses.findByIdAndUpdate(req.params.id, req.body, {
       new: true,

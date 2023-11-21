@@ -5,10 +5,9 @@ const { Sing, Verify } = require("../service/tokenService")
 const { JWT_SECRET } = process.env
 
 exports.singup = async (req, res, next) => {
-    let validate = singupJoi(req.body)
-    if (validate) return next(validate)
-
     try {
+
+        await singupJoi.validateAsync(req.body)
 
         let user = await User.findOne({ email: req.body.email })
         if (user) return next(userExist())
@@ -24,10 +23,9 @@ exports.singup = async (req, res, next) => {
 }
 
 exports.login = async (req, res, next) => {
-    let validate = loginJoi(req.body)
-    if (validate) return next(validate)
 
     try {
+        await loginJoi.validateAsync(req.body)
 
         let user = await User.findOne({ email: req.body.email }).select("+password")
         if (!user) return next(userExist("User not Exist pls SingUP!", 404))
@@ -44,10 +42,9 @@ exports.login = async (req, res, next) => {
 }
 
 exports.changePassword = async (req, res, next) => {
-    let validate = changePasswordJoi(req.body)
-    if (validate) return next(validate)
-    try {
 
+    try {
+        await changePasswordJoi.validateAsync(req.body)
         let user = await User.findById(req.user._id).select("+password")
         if (!user) return next(userExist())
 
@@ -67,11 +64,9 @@ exports.changePassword = async (req, res, next) => {
 }
 
 exports.resetPasswordSendLink = async (req, res, next) => {
-    let validate = emailJoi(req.body)
-    if (validate) return next(validate)
 
     try {
-
+        await emailJoi.validateAsync(req.body)
         let user = await User.findOne({ email: req.body.email })
         if (!user) return next(userExist("User not Found!"))
 
@@ -90,12 +85,11 @@ exports.resetPasswordSendLink = async (req, res, next) => {
 
 exports.resetPassword = async (req, res, next) => {
     let { id, token } = req.params
-    let validate = resetPasswordJoi({
-        password: req.body.password, id, token
-    })
-    if (validate) return next(validate)
 
     try {
+        await resetPasswordJoi.validateAsync({
+            password: req.body.password, id, token
+        })
         let user = await User.findById(req.params.id).select("+password")
         if (!user) return next(userExist("User Not Found"))
 
@@ -132,8 +126,7 @@ exports.getProfile = async (req, res, next) => {
 exports.updateProfile = async (req, res, next) => {
     try {
 
-        let validate = updateProfileJoi(req.body)
-        if (validate) return next(validate)
+        await updateProfileJoi.validateAsync(req.body)
 
         let user = await User.findById(req.user._id)
         if (!user) return next(userExist("User Not Preset!", 404))

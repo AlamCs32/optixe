@@ -14,4 +14,4 @@ exports.lensesSchemaJoi = Joi.object({
   UV_Protection: Joi.boolean().default(false),
   Water_and_Dust_Repellent: Joi.boolean().default(false),
   Breakage_and_Crack_Resistant: Joi.boolean().default(false),
-});
+}).options({ abortEarly: false })

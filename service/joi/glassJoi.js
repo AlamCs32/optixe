@@ -19,4 +19,4 @@ exports.productSchemaJoi = Joi.object({
     Temple_Length: Joi.string(),
     Frame_Height: Joi.string(),
   }),
-});
+}).options({ abortEarly: false })

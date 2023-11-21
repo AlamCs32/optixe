@@ -3,7 +3,7 @@ const { wishlistJoiSchema } = require("../service/joi/whishlistJoi");
 
 exports.createWishlist = async (req, res, next) => {
   try {
-    await wishlistJoiSchema.validateAsync(req.body, { abortEarly: false });
+    await wishlistJoiSchema.validateAsync(req.body);
 
     req.body.userId = req.user._id
 

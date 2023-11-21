@@ -39,4 +39,4 @@ exports.contactLensesSchemaJoi = Joi.object({
     Gender: Joi.string().default("unisex"),
     Condition: Joi.string(),
   }),
-});
+}).options({ abortEarly: false })

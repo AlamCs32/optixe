@@ -3,10 +3,12 @@ const { Glasses } = require("../model");
 const { NotFound } = require("../service/customeError");
 const { productSchemaJoi } = require("../service/joi/glassJoi");
 const { buildFilters } = require("../service/glassHelper");
+const { getPaginatedData } = require("../service/helperFunction");
+
 
 exports.createGlasses = async (req, res, next) => {
   try {
-    await productSchemaJoi.validateAsync(req.body, { abortEarly: false });
+    await productSchemaJoi.validateAsync(req.body);
     req.body.Images = ["sunglasses_front.jpg", "sunglasses_side.jpg"];
 
     let glass = await Glasses.create(req.body);
@@ -24,24 +26,20 @@ exports.createGlasses = async (req, res, next) => {
 exports.getGlasses = async (req, res, next) => {
   try {
     const { price, page, ...queryParams } = req.query;
-    const limit = 20;
-    const skip = (parseInt(page) - 1 || 0) * limit;
 
     const filters = buildFilters(queryParams);
-
     // Additional filter for 'price' (exact match, not regex)
     if (price) {
       filters.Price = { $lte: price };
     }
-    const glasses = await Glasses.find(filters).skip(skip).limit(limit);
-    const count = await Glasses.countDocuments(filters)
-    const totalpage = Math.ceil(count / limit)
+
+    const { data, totalRecord, pages, limit, currentPage } = await getPaginatedData(Glasses, req.query, filters)
+
     return res.status(200).json({
       success: true,
-      data: glasses,
+      data,
       pagination: {
-        page,
-        totalpage
+        totalRecord, pages, limit, currentPage
       }
     });
   } catch (error) {
@@ -50,9 +48,7 @@ exports.getGlasses = async (req, res, next) => {
 };
 exports.getGlassesDetails = async (req, res, next) => {
   try {
-    let glass = await Glasses.findById(req.params.id).catch((e) =>
-      next(NotFound())
-    );
+    let glass = await Glasses.findById(req.params.id)
 
     if (!glass) return next(NotFound());
 
@@ -67,11 +63,11 @@ exports.getGlassesDetails = async (req, res, next) => {
 
 exports.updateGlasses = async (req, res, next) => {
   try {
-    await productSchemaJoi.validateAsync(req.body, { abortEarly: false });
+    await productSchemaJoi.validateAsync(req.body);
 
     let glass = await Glasses.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
-    }).catch((e) => next(NotFound()));
+    })
 
     if (!glass) return next(NotFound());
 
@@ -87,9 +83,7 @@ exports.updateGlasses = async (req, res, next) => {
 
 exports.deleteGlasses = async (req, res, next) => {
   try {
-    let glass = await Glasses.findByIdAndDelete(req.params.id).catch((e) =>
-      next(NotFound())
-    );
+    let glass = await Glasses.findByIdAndDelete(req.params.id)
 
     if (!glass) return next(NotFound());
 

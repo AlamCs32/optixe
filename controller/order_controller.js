@@ -3,11 +3,10 @@ const { orderJoiSchema } = require("../service/joi/orderJoi");
 const mongoose = require("mongoose")
 
 exports.createGlassOrder = async (req, res, next) => {
-  let session = await mongoose.startSession()
   try {
 
-    await orderJoiSchema.validateAsync(req.body, { abortEarly: false, })
-    session.startTransaction()
+    await orderJoiSchema.validateAsync(req.body)
+
     req.body.UserID = req.user._id
     let ids = req.body.OrderItem.map(i => i.GlassID)
     let glasse = await Glasses.find({ _id: ids }).select("Stock Price")
@@ -43,17 +42,12 @@ exports.createGlassOrder = async (req, res, next) => {
       })
     }
 
-    await session.commitTransaction()
-    session.endSession()
-
     return res.status(200).json({
       success: true,
       message: "Order is Created",
       data: order
     });
   } catch (error) {
-    await session.abortTransaction()
-    session.endSession()
     return next(error);
   }
 };

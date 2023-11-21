@@ -13,67 +13,42 @@ function customMessage(fieldName) {
 }
 
 // User joi Validation
-exports.singupJoi = (body) => {
-  let schema = joi.object({
-    username: joi.string().messages(customMessage("username")).required(),
-    email: joi.string().email().messages(customMessage("email")).required(),
-    password: joi.string().messages(customMessage("password")).required(),
-    phoneNo: joi.number().min(10).required(),
-    address: joi.array().string(),
-  });
-  let { error } = schema.validate(body, { abortEarly: false });
-  console.log({ error });
-  return error ? error : false;
-};
+exports.singupJoi = joi.object({
+  username: joi.string().messages(customMessage("username")).required(),
+  email: joi.string().email().messages(customMessage("email")).required(),
+  password: joi.string().messages(customMessage("password")).required(),
+  phoneNo: joi.number().min(10).required(),
+  address: joi.array(),
+}).options({ abortEarly: false });
 
-exports.loginJoi = (body) => {
-  let schema = joi.object({
-    email: joi.string().email().messages(customMessage("email")).required(),
-    password: joi.string().messages(customMessage("password")).required(),
-  });
-  let { error } = schema.validate(body, { abortEarly: false });
-  return error ? error : false;
-};
+exports.loginJoi = joi.object({
+  email: joi.string().email().messages(customMessage("email")).required(),
+  password: joi.string().messages(customMessage("password")).required(),
+}).options({ abortEarly: false })
 
-exports.changePasswordJoi = (body) => {
-  let schema = joi.object({
-    password: joi.string().messages(customMessage("password")).required(),
-    old_password: joi
-      .string()
-      .messages(customMessage("old_password"))
-      .required(),
-  });
-  let { error } = schema.validate(body, { abortEarly: false });
-  return error ? error : false;
-};
+exports.changePasswordJoi = joi.object({
+  password: joi.string().messages(customMessage("password")).required(),
+  old_password: joi
+    .string()
+    .messages(customMessage("old_password"))
+    .required(),
+}).options({ abortEarly: false })
 
-exports.emailJoi = (body) => {
-  let schema = joi.object({
-    email: joi.string().email().messages(customMessage("email")).required(),
-  });
-  let { error } = schema.validate(body, { abortEarly: false });
-  return error ? error : false;
-};
+exports.emailJoi = joi.object({
+  email: joi.string().email().messages(customMessage("email")).required(),
+});
 
-exports.resetPasswordJoi = (body) => {
-  let schema = joi.object({
-    id: joi.string().messages(customMessage("id")).required(),
-    token: joi.string().messages(customMessage("token")).required(),
-    password: joi.string().messages(customMessage("password")).required(),
-  });
-  let { error } = schema.validate(body, { abortEarly: false });
-  return error ? error : false;
-};
+exports.resetPasswordJoi = joi.object({
+  id: joi.string().messages(customMessage("id")).required(),
+  token: joi.string().messages(customMessage("token")).required(),
+  password: joi.string().messages(customMessage("password")).required(),
+}).options({ abortEarly: false })
 
 // User Profile
 
-exports.updateProfileJoi = (body) => {
-  let schema = joi.object({
-    username: joi.string().messages(customMessage("username")).required(),
-    address: joi.string(),
-  });
-  let { error } = schema.validate(body, { abortEarly: false });
-  return error ? error : false;
-};
+exports.updateProfileJoi = joi.object({
+  username: joi.string().messages(customMessage("username")).required(),
+  address: joi.string(),
+}).options({ abortEarly: false })
 
 // End User joi Validation
