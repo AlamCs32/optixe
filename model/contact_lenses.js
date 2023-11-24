@@ -14,7 +14,7 @@ const contactLensesSchema = new Schema(
       enum: ["spherical", "toric", "multifocal"],
     },
     LensPerBox: Number,
-    LensColor: String,
+    Lens_Color: String,
     SubCategory: String,
     Rating: {
       type: Number,

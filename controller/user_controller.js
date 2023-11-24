@@ -13,7 +13,7 @@ exports.singup = async (req, res, next) => {
         if (user) return next(userExist())
 
         user = await User.create(req.body)
-        let token = Sing(user._id)
+        const token = Sing(user._id)
 
         return res.status(200).json({ success: true, token, user })
 
@@ -35,7 +35,7 @@ exports.login = async (req, res, next) => {
 
         let token = Sing({ userId: user._id })
 
-        return res.status(200).json({ success: true, token })
+        return res.status(200).json({ success: true, token, user })
     } catch (error) {
         return next(error)
     }
@@ -67,6 +67,7 @@ exports.resetPasswordSendLink = async (req, res, next) => {
 
     try {
         await emailJoi.validateAsync(req.body)
+
         let user = await User.findOne({ email: req.body.email })
         if (!user) return next(userExist("User not Found!"))
 

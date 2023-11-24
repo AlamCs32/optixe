@@ -15,3 +15,16 @@ exports.getPaginatedData = async (model, query, search = {}) => {
         throw new Error("Internal Server Error")
     }
 }
+
+exports.contactLenseFilter = async (query) => {
+
+    const filters = {};
+    for (const key in query) {
+        if (key == "LensPerBox" || key == "Rating" || key == "Stock") {
+            filters[key] = query[key]
+        } else {
+            filters[key] = { $regex: new RegExp(query[key], "i") };
+        }
+    }
+    return filters;
+}

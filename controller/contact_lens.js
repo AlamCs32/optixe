@@ -1,7 +1,7 @@
-const { ContactLens, TechnicalInfo, SubCategory, Lenses } = require("../model");
+const { ContactLens, TechnicalInfo, SubCategory } = require("../model");
 const { contactLensesSchemaJoi } = require("../service/joi/contactLensJoi");
 const { NotFound } = require("../service/customeError");
-const mongoose = require("mongoose");
+const { getPaginatedData, contactLenseFilter } = require("../service/helperFunction");
 
 exports.createContactLens = async (req, res, next) => {
 
@@ -16,7 +16,7 @@ exports.createContactLens = async (req, res, next) => {
     let lens = await ContactLens.create(req.body.lense);
 
     await SubCategory.create({
-      type: lens.LensColor,
+      type: lens.Lens_Color,
       CantactLensID: lens._id,
     });
 
@@ -34,10 +34,17 @@ exports.createContactLens = async (req, res, next) => {
 
 exports.getContactLens = async (req, res, next) => {
   try {
-    let lens = await ContactLens.find();
+
+    const search = await contactLenseFilter(req.query)
+
+    const { data, totalRecord, pages, limit, currentPage } = await getPaginatedData(ContactLens, req.query, search)
+
     return res.status(200).json({
       success: true,
-      data: lens,
+      data,
+      pagination: {
+        limit, pages, currentPage, totalRecord
+      }
     });
   } catch (error) {
     return next(error);

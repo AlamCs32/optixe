@@ -66,7 +66,7 @@ exports.updateLenses = async (req, res, next) => {
 
     let lenses = await Lenses.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
-    }).catch((e) => next(NotFound("Lense Not Found")));
+    })
 
     if (!lenses) return next(NotFound("Lense Not Found"));
 
@@ -82,9 +82,8 @@ exports.updateLenses = async (req, res, next) => {
 
 exports.deleteLenses = async (req, res, next) => {
   try {
-    let lenses = await Lenses.findByIdAndDelete(req.params.id).catch((e) =>
-      next(NotFound("Lense Not Found"))
-    );
+    let lenses = await Lenses.findByIdAndDelete(req.params.id)
+
     if (!lenses) return next(NotFound("Lense Not Found"));
 
     return res.status(200).json({

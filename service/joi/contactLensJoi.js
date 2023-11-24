@@ -13,7 +13,7 @@ exports.contactLensesSchemaJoi = Joi.object({
     ),
     LenseType: Joi.string().valid("spherical", "toric", "multifocal"),
     LensPerBox: Joi.number().integer(),
-    LensColor: Joi.string(),
+    Lens_Color: Joi.string(),
     SubCategory: Joi.string(),
     Rating: Joi.number(),
     Stock: Joi.number().required(),
